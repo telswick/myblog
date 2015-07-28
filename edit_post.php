@@ -13,6 +13,21 @@
  * Time: 7:46 PM
  */
 
+// Implement post insertion
+//    - FRONT END:
+//    - create edit_post.php
+//    - form with a text box for title/author, a huge text box for the post body,
+//      and a submit button
+//    - a heading "Create Post" or similar
+//    - some text describing how to write a post
+
+//    - BACK END:
+//    - check if form was submitted
+//    - grab values from the text fields
+//    - input validation - make sure all fields were filled out
+//    - insert a new row into the database
+
+
 
 include 'db_info.php';
 

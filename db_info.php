@@ -14,6 +14,16 @@
  * Time: 7:40 PM
  */
 
+
+// Implement database connection
+//    - Write db_info.php that contains the MySQL server name,
+//      username, password, and database name
+//    - Also, create an instance of `new mysqli()` for the other pages
+//      to include// Implement database connection
+//    - Write db_info.php that contains the MySQL server name,
+//      username, password, and database name
+//    - Also, create an instance of `new mysqli()` for the other pages
+//      to include
 //  url,   user,   pw,   name of database
 
 $db = new mysqli("localhost", "root", "root", "blog");
