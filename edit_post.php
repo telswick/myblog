@@ -32,7 +32,7 @@
 include 'db_info.php';
 
 // include database connection stuff in db_info.php
-// could use require_once instead (but remember parenthesis)
+// could use require_once instead (but remember parentheses)
 // can't include the same file twice if you use require_once
 
 // below, probably don't want "date" to be a user input from the form
