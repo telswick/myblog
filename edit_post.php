@@ -137,4 +137,14 @@ if (isset($_POST['submit']))  {
 
 ?>
 
-<a href="index.php">Going to the index page</a>
+<br>
+<br>
+You have successfully submitted your post!!!!!!
+
+Now you can look at all of the posts:
+<a href="index.php">Go to the index page</a>
+
+<br>
+<br>
+Or you can search the posts by keyword.....
+<a href="search.php">Go to the Search Page</a>
