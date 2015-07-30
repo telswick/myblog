@@ -19,39 +19,48 @@
 ?>
 
 <!-- You can insert the CSS to either the document Head or link it as an external resource -->
+
+<!DOCTYPE html>
+<html>
 <head>
-<style type="text/css">
-    table.table-style-three {
-    font-family: verdana, arial, sans-serif;
-		font-size: 11px;
-		color: #333333;
-		border-width: 1px;
-		border-color: #3A3A3A;
-		border-collapse: collapse;
-	}
-	table.table-style-three th {
-    border-width: 1px;
-		padding: 8px;
-		border-style: solid;
-		border-color: #FFA6A6;
-		background-color: #D56A6A;
-		color: #ffffff;
-	}
-	table.table-style-three tr:hover td {
-    cursor: pointer;
-}
-	table.table-style-three tr:nth-child(even) td{
-    background-color: #F7CFCF;
-	}
-	table.table-style-three td {
-    border-width: 1px;
-		padding: 8px;
-		border-style: solid;
-		border-color: #FFA6A6;
-		background-color: #ffffff;
-	}
-</style>
+    <style>
+        table, td, th, tr {
+            border: 1px solid coral;
+        }
+
+        table {
+            width: 50%;
+        }
+
+        table.center {
+            width:50%;
+            margin-left:25%;
+            margin-right:25%;
+        }
+
+        td  {
+            padding: 8px;
+            height: 10px;
+        }
+
+        th {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: lightcoral;
+            color: white;
+            height: 50px;
+        }
+
+        tr  {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: blanchedalmond;
+            color: black;
+        }
+    </style>
 </head>
+
+
+
+
 
 <?php
 
@@ -71,7 +80,8 @@ include 'db_info.php';
 
     ?>
 
-<table border="1"> <!-- start a table -->
+<body>
+<table border="1" class="center"> <!-- start a table -->
     <tr> <!-- first row -->
         <th>Title</th> <!-- header -->
         <th>Author</th>
@@ -81,9 +91,9 @@ include 'db_info.php';
     <tr> <!-- second row -->
         <?php foreach ($result as $row)  {  ?>
     <tr>
-        <td><?php echo ($row['title']);            ?></td>
-        <td><?php echo ($row['author']);      ?></td>
-        <td><?php echo ($row['date']);      ?></td>
+        <td><?php echo ($row['title']);          ?></td>
+        <td><?php echo ($row['author']);         ?></td>
+        <td><?php echo ($row['date']);           ?></td>
         <td><?php echo ($row['contents']);    }  ?></td>
     </tr> <?php  }  ?>
     <!-- end second row -->
@@ -92,7 +102,7 @@ include 'db_info.php';
 
     </tr> <!-- end third row -->
 </table> <!-- end the table -->
-
+</body>
 
 <?php
 
