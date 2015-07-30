@@ -47,7 +47,7 @@
             font-family: Arial, Helvetica, sans-serif;
             background-color: lightcoral;
             color: white;
-            height: 50px;
+            height: 75px;
         }
 
         tr  {
@@ -55,6 +55,11 @@
             background-color: blanchedalmond;
             color: black;
         }
+
+        tbody tr:nth-child(odd) {
+            background-color: #ccc;
+        }
+
     </style>
 </head>
 

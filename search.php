@@ -21,3 +21,43 @@
 //    - displaying the posts is the same as above
 
 include 'db_info.php';
+
+?>
+
+<form action="search.php"
+      method="POST">
+
+    <input type="text" name="posts">
+    <input type="submit" name="submit">
+
+</form>
+
+<ul>
+    <?php
+    $search = "SELECT * FROM posts";    // need to add WHERE to match search box
+    $result = $db->query($search);
+
+    if ($result)  {
+
+
+
+    ?>
+
+    <table border="1"> <!-- start a table -->
+        <tr> <!-- first row -->
+            <th>To Do Item</th> <!-- header -->
+            <th>Date Added</th>
+        </tr> <!-- end first row -->
+        <tr> <!-- second row -->
+            <?php foreach ($result as $row)  {  ?>
+        <tr>
+            <td><?php echo ($row['item']);            ?></td>
+            <td><?php echo ($row['assigndate']);   }  ?></td>
+        </tr> <?php  }  ?>
+        <!-- end second row -->
+        <tr> <!-- third row -->
+
+
+        </tr> <!-- end third row -->
+    </table> <!-- end the table -->
+
