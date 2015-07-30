@@ -47,11 +47,11 @@ include 'db_info.php';
 <form action="edit_post.php"
       method="POST">
     Enter your blog post....<br>
-    <input style="color:coral" type="text" name="title" placeholder="Title your post"><br>
-    <input style="color:coral" type="text" name="author" placeholder="Who are you?"><br>
+    <input style="color:coral" type="text" name="title" placeholder="Title your post"><br><br>
+    <input style="color:coral" type="text" name="author" placeholder="Who are you?"><br><br>
 
     <textarea style="background-color:lightblue"  name="contents"
-              rows="25" cols="80" onclick="this.innerhtml=' '">
+              rows="25" cols="80" onclick="this.innerHTML=''">
         Write something!</textarea><br><br>
     <input type="submit" name="submit" value="Submit Blog Post"><br>
 
@@ -61,46 +61,80 @@ include 'db_info.php';
 
 // placeholder is like value, but it disappears
 
+
+
+
+
 if (isset($_POST['submit']))  {
     $title = $_POST['title'];
     $author = $_POST['author'];
-    $mydate = date("d F Y H:i:s");
-    $contents = $_POST['contents'];
-// }
+    $mydate =  date("d F Y H:i:s");
 
+    //echo $mydate;
+    $contents = $_POST['contents'];
+
+    $error = "";
+
+    if ($title == "")  {
+        $error .= "You forgot to add a title!<br>";
+        // echo $error;
+
+    }
+    else if ($author == "")  {
+        $error .= "You forgot to put your name!<br>";
+        // echo $error;
+    }
+    else if ($contents == "" || $contents == "Write something!")  {
+        $error .= "So what did you want to write in your blog post...?  Hello, are you still there?<br>";
+        // echo $error;
+    }
+
+    // if ANYTHING set an error, don't insert the post
+
+    if ($error != "")  {
+        // just print out the error and don't make the post
+        echo $error;
+    }
+    else {
+        // We are good to make the post
+
+
+
+
+// do some input validation above here
+// use if statements to check if all of the fields are filled out, if not
+//  display a message on page like "you forgot ..."
 // copying from hw8, todo_list
 
-$stmt = $db->prepare("INSERT INTO posts (title, author, date, contents) VALUES (?, ?, ?, ?)");
-echo $db->error;
+        $stmt = $db->prepare("INSERT INTO posts (title, author, date, contents) VALUES (?, ?, ?, ?)");
+        echo $db->error;
 
 // if (!isset($_SESSION['list'])) {
 //     $_SESSION['list'] = array();
 // }
-
 // if (isset($_POST['submit'])) {
-    // add the text in 'todo'
-    // to the SESSION variable 'list'
-    // array_push($_SESSION['list'],
-    //            $_POST['todo']);
-
-    //$stmt = $db->prepare("INSERT INTO todo_list ('item', 'assigndate') VALUES (?, ?)");
-    //$stmt = $db->prepare("INSERT INTO todo_list (item) VALUES (?)");
-
-
-    // $mydate =  date("d F Y H:i:s");
-    // $todo = $_POST['todo'];
+        // add the text in 'todo'
+        // to the SESSION variable 'list'
+        // array_push($_SESSION['list'],
+        //            $_POST['todo']);
+        //$stmt = $db->prepare("INSERT INTO todo_list ('item', 'assigndate') VALUES (?, ?)");
+        //$stmt = $db->prepare("INSERT INTO todo_list (item) VALUES (?)");
 
 
-    // $stmt->bind_param("s", $todo);
-    $stmt->bind_param("ssss", $title, $author, $mydate, $contents);
-    // $stmt->close();
+        echo "Timestamp = " . $mydate;
+        $stmt->bind_param("ssss", $title, $author, $mydate, $contents);
+        // $stmt->close();
 
 //actually run statement with the parameters we've substituted, how to add a row
 
-    $stmt->execute();
+        $stmt->execute();
+    }
 }
 
 
 
 
+
 ?>
+
+<a href="index.php">Going to the index page</a>
