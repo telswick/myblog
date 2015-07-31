@@ -75,41 +75,15 @@ include 'db_info.php';
 
 // here is where to add the stuff to display all of the blog posts (like in todo_list)
 
-    $sql = "SELECT * FROM posts";
-    $result = $db->query($sql);
+    // $sql = "SELECT * FROM posts";
+    // $result = $db->query($sql);
 
-    if ($result)  {
+    // if ($result)  {
 
     //tr starts new row, td for each column in row
 
 
-    ?>
 
-<body>
-<table border="1" class="center"> <!-- start a table -->
-    <tr> <!-- first row -->
-        <th>Title</th> <!-- header -->
-        <th>Author</th>
-        <th>Date Added</th>
-        <th>Contents</th>
-    </tr> <!-- end first row -->
-    <tr> <!-- second row -->
-        <?php foreach ($result as $row)  {  ?>
-    <tr>
-        <td><?php echo ($row['title']);          ?></td>
-        <td><?php echo ($row['author']);         ?></td>
-        <td><?php echo ($row['date']);           ?></td>
-        <td><?php echo ($row['contents']);    }  ?></td>
-    </tr> <?php  }  ?>
-    <!-- end second row -->
-    <tr> <!-- third row -->
-
-
-    </tr> <!-- end third row -->
-</table> <!-- end the table -->
-</body>
-
-<?php
 
 
 // in class, put search box on index page
@@ -124,7 +98,7 @@ include 'db_info.php';
 if (isset($_GET['cool']))   {
         // set up the SELECT query
         // $term = $_GET['term'];
-    $sql = $db->prepare("SELECT title, author, contents, date FROM posts WHERE contents LIKE ?");    // need to add WHERE to match search box
+    $sql = $db->prepare("SELECT title, author, contents, date FROM posts WHERE contents LIKE ?");
 
     $search_term = "%" . $_GET['searchBox'] . "%";
 
@@ -133,17 +107,41 @@ if (isset($_GET['cool']))   {
 
     $sql->bind_result($title, $author, $contents, $date);
 
-    while($sql->fetch())   {
-        echo $title;
-        echo $contents;
-    }
+    ?>
+
+    <body>
+    <table border="1" class="center"> <!-- start a table -->
+    <tr> <!-- first row -->
+        <th>Title</th> <!-- header -->
+        <th>Author</th>
+        <th>Date Added</th>
+        <th>Contents</th>
+    </tr> <!-- end first row -->
+    <tr> <!-- second row -->
+        <?php while ($sql->fetch())  {  ?>
+        <tr>
+        <td><?php echo ($title);          ?></td>
+        <td><?php echo ($author);         ?></td>
+        <td><?php echo ($date);           ?></td>
+        <td><?php echo ($contents);    }  ?></td>
+    </tr> <?php    ?>
+<!-- end second row -->
+<tr> <!-- third row -->
 
 
+</tr> <!-- end third row -->
+</table> <!-- end the table -->
+</body>
 
+<?php
+
+    //while($sql->fetch())   {
+    //    echo $title;
+    //    echo $contents;
+    //}
     // bind result, you choose names where to store a row into name variables
     // variables don't have to exist already
     // $statement->bind_result($title, $author, $contents, $date);
-
     // then need to get the data with while loop
     // each fetch per each row in matching posts
     // continues while there are more matching
@@ -152,23 +150,47 @@ if (isset($_GET['cool']))   {
     // while ($statement->fetch())  {
     //    echo $title;
     //    echo $contents;
-
-
     // $result = $db->query($search);
-        // bind_param
-        // then use '%   %'
-        // execute
-
-        // when you get to this point it changes to we'll talk more
+    // bind_param
+    // then use '%   %'
+    // execute
+    // when you get to this point it changes to we'll talk more
 
 }   else   {
         // your existing SELECT logic here
-}
+        $sql = "SELECT * FROM posts";
+        $result = $db->query($sql);
+
+        if ($result)  {
+
+    ?>
+
+    <body>
+    <table border="1" class="center"> <!-- start a table -->
+    <tr> <!-- first row -->
+        <th>Title</th> <!-- header -->
+        <th>Author</th>
+        <th>Date Added</th>
+        <th>Contents</th>
+    </tr> <!-- end first row -->
+    <tr> <!-- second row -->
+        <?php foreach ($result as $row)  {  ?>
+        <tr>
+        <td><?php echo ($row['title']);          ?></td>
+        <td><?php echo ($row['author']);         ?></td>
+        <td><?php echo ($row['date']);           ?></td>
+        <td><?php echo ($row['contents']);    }  ?></td>
+    </tr> <?php  }  ?>
+<!-- end second row -->
+
+</table> <!-- end the table -->
+</body>
 
 
 
 
-?>
+
+
 
 <form action="index.php" method="GET">
     <!--  search form ... -->
@@ -177,3 +199,6 @@ if (isset($_GET['cool']))   {
 
 </form>
 
+
+
+<?php  }  ?>
