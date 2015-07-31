@@ -47,10 +47,10 @@ include 'db_info.php';
 <form action="edit_post.php"
       method="POST">
     Enter your blog post....<br>
-    <input style="color:coral" type="text" name="title" placeholder="Title your post"><br><br>
-    <input style="color:coral" type="text" name="author" placeholder="Who are you?"><br><br>
+    <input style="background-color:blanchedalmond" "color:coral" type="text" name="title" placeholder="Title your post"><br><br>
+    <input style="background-color:blanchedalmond" "color:coral" type="text" name="author" placeholder="Who are you?"><br><br>
 
-    <textarea style="background-color:lightblue"  name="contents"
+    <textarea style="background-color:lightblue" "color:coral"  name="contents"
               rows="25" cols="80" onclick="this.innerHTML=''">
         Write something!</textarea><br><br>
     <input type="submit" name="submit" value="Submit Blog Post"><br>
@@ -139,8 +139,9 @@ if (isset($_POST['submit']))  {
 
 <br>
 <br>
-You have successfully submitted your post!!!!!!
-
+You have successfully submitted your post!!!!!!  Insert pretty picture here tbd
+<br>
+<br>
 Now you can look at all of the posts:
 <a href="index.php">Go to the index page</a>
 

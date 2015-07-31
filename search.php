@@ -20,6 +20,8 @@
 //      for posts matching the search box
 //    - displaying the posts is the same as above
 
+// in class, change to putting search box on index.php page
+
 include 'db_info.php';
 
 ?>

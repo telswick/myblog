@@ -111,12 +111,69 @@ include 'db_info.php';
 
 <?php
 
-// echo "<tr><td>$row[item]</td><td>$row[assigndate]</td><td>\n";
+
+// in class, put search box on index page
+// Select * from posts
+// WHERE contents LIKE
+// "%    "
+// "     %"
+// "%    %"   will search for key anywhere in the column
+// use single quotes so don't have to worry about escaping them
+
+
+if (isset($_GET['cool']))   {
+        // set up the SELECT query
+        // $term = $_GET['term'];
+    $sql = $db->prepare("SELECT title, author, contents, date FROM posts WHERE contents LIKE ?");    // need to add WHERE to match search box
+
+    $search_term = "%" . $_GET['searchBox'] . "%";
+
+    $sql->bind_param("s", $search_term);
+    $sql->execute();
+
+    $sql->bind_result($title, $author, $contents, $date);
+
+    while($sql->fetch())   {
+        echo $title;
+        echo $contents;
+    }
 
 
 
-//else {
-//  echo $db->error;
-//}
+    // bind result, you choose names where to store a row into name variables
+    // variables don't have to exist already
+    // $statement->bind_result($title, $author, $contents, $date);
+
+    // then need to get the data with while loop
+    // each fetch per each row in matching posts
+    // continues while there are more matching
+    // and stops when no more matches
+    // go through every row
+    // while ($statement->fetch())  {
+    //    echo $title;
+    //    echo $contents;
+
+
+    // $result = $db->query($search);
+        // bind_param
+        // then use '%   %'
+        // execute
+
+        // when you get to this point it changes to we'll talk more
+
+}   else   {
+        // your existing SELECT logic here
+}
+
+
+
 
 ?>
+
+<form action="index.php" method="GET">
+    <!--  search form ... -->
+    <input type="text" name="searchBox" >
+    <input type="submit" name="cool" value="Search" >
+
+</form>
+
