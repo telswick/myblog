@@ -25,7 +25,7 @@
 <head>
     <style>
         table, td, th, tr {
-            border: 1px solid coral;
+            border: 1px solid darkslateblue;
         }
 
         table {
@@ -33,9 +33,9 @@
         }
 
         table.center {
-            width:50%;
-            margin-left:25%;
-            margin-right:25%;
+            width:70%;
+            margin-left:15%;
+            margin-right:15%;
         }
 
         td  {
@@ -45,14 +45,14 @@
 
         th {
             font-family: Arial, Helvetica, sans-serif;
-            background-color: lightcoral;
+            background-color: cadetblue;
             color: white;
             height: 75px;
         }
 
         tr  {
             font-family: Arial, Helvetica, sans-serif;
-            background-color: blanchedalmond;
+            background-color: lightsteelblue;
             color: black;
         }
 
