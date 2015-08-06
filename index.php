@@ -65,25 +65,16 @@
 
 
 
-
-
 <?php
-
 
 include 'db_info.php';
 
 
 // here is where to add the stuff to display all of the blog posts (like in todo_list)
-
     // $sql = "SELECT * FROM posts";
     // $result = $db->query($sql);
-
     // if ($result)  {
-
     //tr starts new row, td for each column in row
-
-
-
 
 
 // in class, put search box on index page
@@ -94,15 +85,17 @@ include 'db_info.php';
 // "%    %"   will search for key anywhere in the column
 // use single quotes so don't have to worry about escaping them
 
+// The following executes if the user clicks the Search button
 
 if (isset($_GET['cool']))   {
         // set up the SELECT query
         // $term = $_GET['term'];
-    $sql = $db->prepare("SELECT title, author, contents, date FROM posts WHERE contents LIKE ?");
+    $sql = $db->prepare("SELECT title, author, contents, date FROM posts WHERE 'contents' LIKE ? OR 'title' LIKE ?");
+    // How to search both title and contents?
 
     $search_term = "%" . $_GET['searchBox'] . "%";
 
-    $sql->bind_param("s", $search_term);
+    $sql->bind_param("ss", $search_term, $search_term);
     $sql->execute();
 
     $sql->bind_result($title, $author, $contents, $date);
@@ -156,6 +149,8 @@ if (isset($_GET['cool']))   {
     // execute
     // when you get to this point it changes to we'll talk more
 
+    // The following executes if the user does not click Search box, prints entire index
+
 }   else   {
         // your existing SELECT logic here
         $sql = "SELECT * FROM posts";
@@ -172,6 +167,7 @@ if (isset($_GET['cool']))   {
         <th>Author</th>
         <th>Date Added</th>
         <th>Contents</th>
+        <th>Link to edit</th>
     </tr> <!-- end first row -->
     <tr> <!-- second row -->
         <?php foreach ($result as $row)  {  ?>
@@ -179,26 +175,42 @@ if (isset($_GET['cool']))   {
         <td><?php echo ($row['title']);          ?></td>
         <td><?php echo ($row['author']);         ?></td>
         <td><?php echo ($row['date']);           ?></td>
-        <td><?php echo ($row['contents']);    }  ?></td>
-    </tr> <?php  }  ?>
+        <td><?php echo ($row['contents']);       ?></td>
+        <td>  <a href="edit_post.php?id=<?php echo $row['id']; ?>">View/Edit</a></td>  <?php } ?>
+        </tr> <?php  }  ?>
 <!-- end second row -->
 
 </table> <!-- end the table -->
 </body>
 
 
+    <a href="search.php">Go to the Search Page</a>
+
+    <a href="edit_post.php?id = $post_id ">
 
 
+    </a>
 
 
-
-<form action="index.php" method="GET">
+    <form action="index.php" method="GET">
     <!--  search form ... -->
+    <br>
+    Search blog index by keyword: <br>
     <input type="text" name="searchBox" >
     <input type="submit" name="cool" value="Search" >
 
+
+
+        <form action="index.php" method="GET">
+            <!--  edit form ... -->
+            <br>
+            Edit post by selecting id: <br>
+            <input type="text" name="searchBox" >
+            <input type="submit" name="edit" value="Edit" >
+
+
+
+
 </form>
 
-
-
-<?php  }  ?>
+<?php } ?>
