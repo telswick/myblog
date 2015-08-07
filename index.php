@@ -168,6 +168,7 @@ if (isset($_GET['cool']))   {
         <th>Date Added</th>
         <th>Contents</th>
         <th>Link to edit</th>
+        <th>Delete</th>
     </tr> <!-- end first row -->
     <tr> <!-- second row -->
         <?php foreach ($result as $row)  {  ?>
@@ -176,7 +177,8 @@ if (isset($_GET['cool']))   {
         <td><?php echo ($row['author']);         ?></td>
         <td><?php echo ($row['date']);           ?></td>
         <td><?php echo ($row['contents']);       ?></td>
-        <td>  <a href="edit_post.php?id=<?php echo $row['id']; ?>">View/Edit</a></td>  <?php } ?>
+        <td>  <a href="edit_post.php?id=<?php echo $row['id']; ?>">View/Edit</a></td>
+        <td>  <a href="index.php?id=<?php echo $row['id']; ?>">Delete</a></td>  <?php } ?>
         </tr> <?php  }  ?>
 <!-- end second row -->
 

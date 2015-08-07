@@ -46,8 +46,59 @@ include 'db_info.php';
 <h1>Welcome to Traci's blog</h1>
 <br>
 <?php
+// this section is for editing posts
 // do this if the id variable has value, coming from index.php page
+// changing everything from now on
+$id = "NULL";
+if (isset($_GET['id']))  {
+    $id = $_GET['id'];
+}
+
+if(isset$_POST['submit']))  {
+
+    if($_POST['id'] == "NULL")  {
+        // id was NULL
+        // it's a new post
+        // still new because there is nothing in $_GET['id'] from the indes page
+        // your existing logic for inserting a new post goes here.
+
+        //------------------------------------------------------------------//
+        // Copying all logic for brand new post here                        //
+
+
+
+
+
+
+        // Above is logic for brand new post
+        //------------------------------------------------------------------//
+
+
+
+
+
+
+    } else  {
+        // id was not NULL
+        // this is an existing post
+        // update it.
+        // so there is something in the $_GET['id] url
+        // coming from the index page
+
+        // UPDATE posts SET title = ?, author = ?, contents = ?
+        // WHERE id = ?
+    }
+
+        //------------------------------------------------------------------//
+        // Copying all logic for doing an edit post with alternate submit button//
+        // called edit submit and different form text
+
+}
+
+// below is my old way
 if (isset($_GET['id'])) {
+
+    $id = $_GET['id'];
 
     $sql = $db->prepare("SELECT title, author, contents FROM posts WHERE id = ?");
     // How to search both title and contents?
@@ -74,19 +125,77 @@ if (isset($_GET['id'])) {
         <input style="background-color:blanchedalmond" type="text" name="author" placeholder="Who are you?"
         value = "<?php echo "$author"; ?>"><br><br>
 
+        <input type="hidden" name="id" value=" <?php   echo $id;  ?>  ">
+
     <textarea style="background-color:lightblue" name="contents"
               rows="20" cols="80" onclick="this.innerHTML=''">
         <?php echo $contents; ?></textarea><br><br>
-        <input type="submit" name="submit" value="Submit Blog Post"><br>
+        <input type="submit" name="editsubmit" value="Submit Edited Blog Post"><br>
+
 
     </form>
 
+    <?php
+
+    // Insert copy of php code that stores blog posts, except use Update instead and only change the
+    // one post with id selected
 
 
+    if (isset($_POST['editsubmit'])) {
+    $title = $_POST['title'];
+    $author = $_POST['author'];
+    $mydate = date("d F Y H:i:s");
+    $contents = $_POST['contents'];
 
-<?php
+    $error = "";
+
+    if ($title == "") {
+    $error .= "You forgot to add a title!<br>";
+    // echo $error;
+
+    } else if ($author == "") {
+    $error .= "You forgot to put your name!<br>";
+    // echo $error;
+    } else if ($contents == "" || $contents == "Write something!") {
+    $error .= "So what did you want to write in your blog post...?  Hello, are you still there?<br>";
+    // echo $error;
+    }
+
+    // if ANYTHING set an error, don't insert the post
+
+    if ($error != "") {
+    // just print out the error and don't make the post
+    echo $error;
     } else {
+    // We are good to make the post
 
+
+    // do some input validation above here
+    // use if statements to check if all of the fields are filled out, if not
+    //  display a message on page like "you forgot ..."
+    // copying from hw8, todo_list
+
+    // Here we are working on submitting an edited blog post, update only the post whose id has
+    // come over in the url from the index.php page when VIEW/EDIT button is clicked
+
+    //$stmt = $db->prepare("UPDATE posts  WHERE ");
+
+    //OK try what Matt suggests to make it easier than using UPDATE
+    //plug in from the get variable
+
+    $stmt = $db->prepare("INSERT INTO posts (id, title, author, date, contents) VALUES (?, ?, ?, ?, ?)
+    ,
+                            contents = VALUES(contents)");
+    echo $db->error;
+
+        $stmt->bind_param("ssss", $title, $author, $mydate, $contents);
+        $stmt->execute();
+    }
+    }
+
+
+    } else {
+    // this is the else for submitting a new (not edited) post
 
     ?>
     <h2>Ok, go ahead and write about anything</h2>
@@ -117,6 +226,7 @@ if (isset($_GET['id'])) {
 
         //echo $mydate;
         $contents = $_POST['contents'];
+        $id = "NULL";
 
         $error = "";
 
@@ -178,8 +288,7 @@ if (isset($_GET['id'])) {
     ?>
 
     <br>
-    <br>
-    You have successfully submitted your post!!!!!!
+
     <br>
     <br>
     Now you can look at all of the posts:
