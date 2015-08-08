@@ -186,12 +186,11 @@ if (isset($_GET['cool']))   {
 </body>
 
 
-    <a href="search.php">Go to the Search Page</a>
-
-    <a href="edit_post.php?id = $post_id ">
-
-
-    </a>
+    <?php
+    // <a href="search.php">Go to the Search Page</a>
+    // <a href="edit_post.php?id = $post_id ">
+    // </a>
+    ?>
 
 
     <form action="index.php" method="GET">
@@ -201,18 +200,19 @@ if (isset($_GET['cool']))   {
     <input type="text" name="searchBox" >
     <input type="submit" name="cool" value="Search" >
 
+    <?php
+
+        // <form action="index.php" method="GET">
+        // <!--  edit form ... -->
+        //     <br>
+        //     Edit post by selecting id: <br>
+        //     <input type="text" name="searchBox" >
+        //     <input type="submit" name="edit" value="Edit" >
+    ?>
 
 
-        <form action="index.php" method="GET">
-            <!--  edit form ... -->
-            <br>
-            Edit post by selecting id: <br>
-            <input type="text" name="searchBox" >
-            <input type="submit" name="edit" value="Edit" >
 
 
-
-
-</form>
+    </form>
 
 <?php } ?>
