@@ -67,6 +67,7 @@
 
 <?php
 
+
 include 'db_info.php';
 
 
@@ -85,20 +86,34 @@ include 'db_info.php';
 // "%    %"   will search for key anywhere in the column
 // use single quotes so don't have to worry about escaping them
 
+$delid = "NULL";
+if (isset($_GET['id']))  {
+    $delid = $_GET['id'];
+}
+
+echo "delete id = $delid";
+
 // The following executes if the user clicks the Search button
 
 if (isset($_GET['cool']))   {
         // set up the SELECT query
         // $term = $_GET['term'];
-    $sql = $db->prepare("SELECT title, author, contents, date FROM posts WHERE 'contents' LIKE ? OR 'title' LIKE ?");
+    // $title = $_GET['title'];
+    // $author = $_GET['author'];
+    // $contents = $_GET['contents'];
+    // $id = $_POST['id'];
+
+    $sql = $db->prepare("SELECT title, author, contents, date FROM posts WHERE contents LIKE ? ");
     // How to search both title and contents?
 
     $search_term = "%" . $_GET['searchBox'] . "%";
 
-    $sql->bind_param("ss", $search_term, $search_term);
+    $sql->bind_param("s", $search_term);
     $sql->execute();
 
     $sql->bind_result($title, $author, $contents, $date);
+
+    // table below will only show the rows where the search_term has been found in the contents
 
     ?>
 
@@ -109,15 +124,19 @@ if (isset($_GET['cool']))   {
         <th>Author</th>
         <th>Date Added</th>
         <th>Contents</th>
-    </tr> <!-- end first row -->
+        <th>Link to edit</th>
+        <th>Delete</th>
+    </tr> i<!-- end first row -->
     <tr> <!-- second row -->
         <?php while ($sql->fetch())  {  ?>
         <tr>
-        <td><?php echo ($title);          ?></td>
-        <td><?php echo ($author);         ?></td>
-        <td><?php echo ($date);           ?></td>
-        <td><?php echo ($contents);    }  ?></td>
-    </tr> <?php    ?>
+        <td><?php echo $title;          ?></td>
+        <td><?php echo $author;         ?></td>
+        <td><?php echo $date;           ?></td>
+        <td><?php echo $contents;    }   ?></td>
+
+
+        </tr> <?php   ?>
 <!-- end second row -->
 <tr> <!-- third row -->
 
@@ -126,7 +145,7 @@ if (isset($_GET['cool']))   {
 </table> <!-- end the table -->
 </body>
 
-<?php
+<?php  }  // closing the search option
 
     //while($sql->fetch())   {
     //    echo $title;
@@ -150,8 +169,12 @@ if (isset($_GET['cool']))   {
     // when you get to this point it changes to we'll talk more
 
     // The following executes if the user does not click Search box, prints entire index
+    // and we are not deleting
+    // Try changing else  below to an elseif, so we don't show table twice
+    // Try adding an AND condition about the search button
 
-}   else   {
+
+if($delid == "NULL")   {
         // your existing SELECT logic here
         $sql = "SELECT * FROM posts";
         $result = $db->query($sql);
@@ -179,18 +202,84 @@ if (isset($_GET['cool']))   {
         <td><?php echo ($row['contents']);       ?></td>
         <td>  <a href="edit_post.php?id=<?php echo $row['id']; ?>">View/Edit</a></td>
         <td>  <a href="index.php?id=<?php echo $row['id']; ?>">Delete</a></td>  <?php } ?>
-        </tr> <?php  }  ?>
-<!-- end second row -->
+        </tr> <?php      ?>
+        <!-- end second row -->
+    </table> <!-- end the table -->
+    </body>
 
-</table> <!-- end the table -->
-</body>
+
+    <?php  } } // closing the if result and closing no delete option
 
 
-    <?php
-    // <a href="search.php">Go to the Search Page</a>
-    // <a href="edit_post.php?id = $post_id ">
-    // </a>
-    ?>
+
+    // Add new stuff here to make the delete function
+
+    // $delid = $row['id'];
+    // echo "Delete id = $delid";
+
+    else {
+        // $id = $_POST['id'];
+        $delStatement = $db->prepare("DELETE FROM posts WHERE id = ?");
+
+        $delStatement->bind_param("i", $delid);
+
+        $delStatement->execute();
+
+
+    // and then need to repeat showing the whole index minus post with delete id
+
+        $sql = "SELECT title, author, contents, date FROM posts";
+
+        // $sql->bind_result($title, $author, $contents, $date);
+        // try changing from after search table to regular all index table
+
+        // PROBLEM: going to index page shows both tables, first for no delete and second for delete
+        // ok fixed that, not showing both tables anymore BUT
+        // PROBLEM:  now can only delete one time and then get error second time trying to delete
+        // maybe lost $row['id'] on second delete attempt and also
+        // PROBLEM: can't go back to edit page to edit a post after deleting one post
+        // PROBLEM: search function messed up, showing both tables and not including links (edit & delete)
+        // on the search results table
+
+
+        $result = $db->query($sql);
+
+        if ($result)  {
+
+        ?>
+
+        <body>
+        <table border="1" class="center"> <!-- start a table -->
+        <tr> <!-- first row -->
+            <th>Title</th> <!-- header -->
+            <th>Author</th>
+            <th>Date Added</th>
+            <th>Contents</th>
+            <th>Link to edit</th>
+            <th>Delete</th>
+        </tr> <!-- end first row -->
+        <tr> <!-- second row -->
+        <?php foreach ($result as $row)  {  ?>
+            <tr>
+            <td><?php echo ($row['title']);          ?></td>
+            <td><?php echo ($row['author']);         ?></td>
+            <td><?php echo ($row['date']);           ?></td>
+            <td><?php echo ($row['contents']);       ?></td>
+            <td>  <a href="edit_post.php?id=<?php echo $row['id']; ?>">View/Edit</a></td>
+            <td>  <a href="index.php?id=<?php echo $row['id']; ?>">Delete</a></td>  <?php  ?>
+            </tr> <?php  }  ?>
+            <!-- end second row -->
+
+        </table> <!-- end the table -->
+        </body>
+
+
+
+
+
+
+        <?php }  }  // closing the if result and closing the delete option (else)
+                    // New stuff above for delete function   ?>
 
 
     <form action="index.php" method="GET">
@@ -199,20 +288,6 @@ if (isset($_GET['cool']))   {
     Search blog index by keyword: <br>
     <input type="text" name="searchBox" >
     <input type="submit" name="cool" value="Search" >
-
-    <?php
-
-        // <form action="index.php" method="GET">
-        // <!--  edit form ... -->
-        //     <br>
-        //     Edit post by selecting id: <br>
-        //     <input type="text" name="searchBox" >
-        //     <input type="submit" name="edit" value="Edit" >
-    ?>
-
-
-
-
     </form>
 
-<?php } ?>
+<?php          ?>

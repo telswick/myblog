@@ -64,7 +64,7 @@ if ($id == "NULL")   {
 
         // id was NULL
         // it's a new post
-        // still new because there is nothing in $_GET['id'] from the indes page
+        // still new because there is nothing in $_GET['id'] from the index page
         // your existing logic for inserting a new post goes here.
 
         //------------------------------------------------------------------//
@@ -79,6 +79,8 @@ if ($id == "NULL")   {
             Enter your blog post....<br>
             <input style="background-color:blanchedalmond" type="text" name="title" placeholder="Title your post"><br><br>
             <input style="background-color:blanchedalmond" type="text" name="author" placeholder="Who are you?"><br><br>
+
+            <input type="hidden" name="id" value="<?php   echo $id;  ?>">
 
             <textarea style="background-color:lightblue" name="contents"
                 rows="20" cols="80" onclick="this.innerHTML=''">
@@ -98,7 +100,7 @@ if ($id == "NULL")   {
         $author = $_POST['author'];
         $mydate = date("d F Y H:i:s");
         $contents = $_POST['contents'];
-        $id = "NULL";
+        // $id = "NULL";
 
         $error = "";
 
@@ -125,7 +127,7 @@ if ($id == "NULL")   {
 
 // do some input validation above here
 // use if statements to check if all of the fields are filled out, if not
-//  display a message on page like "you forgot ..."
+// display a message on page like "you forgot ..."
 // copying from hw8, todo_list
 
             $stmt = $db->prepare("INSERT INTO posts (title, author, date, contents) VALUES (?, ?, ?, ?)");
@@ -142,8 +144,6 @@ if ($id == "NULL")   {
             //$stmt = $db->prepare("INSERT INTO todo_list ('item', 'assigndate') VALUES (?, ?)");
             //$stmt = $db->prepare("INSERT INTO todo_list (item) VALUES (?)");
 
-
-            // echo "Timestamp = " . $mydate;
             $stmt->bind_param("ssss", $title, $author, $mydate, $contents);
             // $stmt->close();
 
@@ -185,55 +185,63 @@ if ($id == "NULL")   {
 
 
 
-else  {
-        // id was not NULL
-        // this is an existing post
-        // update it.
-        // so there is something in the $_GET['id'] url
-        // coming from the index page
+else {
+    // id was not NULL
+    // this is an existing post
+    // update it.
+    // so there is something in the $_GET['id'] url
+    // coming from the index page
 
-        // UPDATE posts SET title = ?, author = ?, contents = ?
-        // WHERE id = ?
-
-
-        //------------------------------------------------------------------//
-        // Copying all logic for doing an edit post with alternate submit button//
-        // called edit submit and different form text
-        // need to bring the variables in the post to be edited from the index page
+    // UPDATE posts SET title = ?, author = ?, contents = ?
+    // WHERE id = ?
 
 
-?>
+    //------------------------------------------------------------------//
+    // Copying all logic for doing an edit post with alternate submit button//
+    // called edit submit and different form text
+    // need to bring the variables in the post to be edited from the index page
 
-    <h2>Ok, so you want to edit your blog post</h2>
-    <form action="edit_post.php"
-          method="POST">
-        Edit your blog post....<br>
-        <input style="background-color:blanchedalmond" type="text" name="title" placeholder="Title your post"
-               value="<?php echo "$title"; ?>"><br><br>
-        <input style="background-color:blanchedalmond" type="text" name="author" placeholder="Who are you?"
-               value = "<?php echo "$author"; ?>"><br><br>
+    echo "id is $id";
 
-        <input type="hidden" name="id" value="<?php   echo $id;  ?>">
+    $sql = $db->prepare("SELECT title, author, contents FROM posts WHERE id = ?");
 
-        <textarea style="background-color:lightblue" name="contents"
-              rows="20" cols="80" onclick="this.innerHTML=''">
-        <?php echo $contents; ?></textarea><br><br>
-        <input type="submit" name="editsubmit" value="Submit Edited Blog Post"><br>
+    $sql->bind_param("i", $id);
+    $sql->execute();
+
+    $sql->bind_result($title, $author, $contents);
+    $sql->fetch();
 
 
-    </form>
+    // header("Location: http://10.10.10.60/myblog/index.php"); /* Redirect browser */
+    // exit();
 
-    <?php
+
+    // removing form section below to end of file
+
+
+    // removing form section above to end of file
+
+
+    // $url = "http://10.10.10.60/myblog/index.php";
+    // echo '<META HTTP-EQUIV=Refresh CONTENT="0; URL='.$url.'">';
+
+    // header("Location: http://10.10.10.60/myblog/index.php"); /* Redirect browser */
+    // exit();
 
     // Insert copy of php code that stores blog posts, except use Update instead and only change the
     // one post with id selected
 
+    // add code to redirect to index page after post editsubmit but
+
+    echo "id is still: $id";
 
     if (isset($_POST['editsubmit'])) {
         $title = $_POST['title'];
         $author = $_POST['author'];
         $mydate = date("d F Y H:i:s");
         $contents = $_POST['contents'];
+
+        // input validation next
 
         $error = "";
 
@@ -260,26 +268,83 @@ else  {
 
             // do some input validation above here
             // use if statements to check if all of the fields are filled out, if not
-            //  display a message on page like "you forgot ..."
+            // display a message on page like "you forgot ..."
             // copying from hw8, todo_list
-
             // Here we are working on submitting an edited blog post, update only the post whose id has
             // come over in the url from the index.php page when VIEW/EDIT button is clicked
-
             //$stmt = $db->prepare("UPDATE posts  WHERE ");
-
             //OK try what Matt suggests to make it easier than using UPDATE
             //plug in from the get variable
             //go back to using UPDATE posts
 
-            $stmt = $db->prepare("UPDATE posts SET title = ?, author = ?,  date = ?, contents = ?
-                    WHERE ID = ?");
+
+            // header("Location: http://10.10.10.60/myblog/index.php"); /* Redirect browser */
+            // exit();
+
+
+            // header("Location: http://10.10.10.60/myblog/index.php"); /* Redirect browser */
+
+            echo "id is now: $id";
+
+            $stmt = $db->prepare("UPDATE posts SET (title = ?, author = ?,  date = ?, contents = ?)
+                    WHERE id = ?");
             echo $db->error;
 
             $stmt->bind_param("ssssi", $title, $author, $mydate, $contents, $id);
             $stmt->execute();
+
+            // header("Location: http://10.10.10.60/myblog/index.php"); /* Redirect browser */
+            // exit();
+
+            // $url = "http://10.10.10.60/myblog/index.php";
+            // echo '<META HTTP-EQUIV=Refresh CONTENT="0; URL='.$url.'">';
+
+            // desperate so try javascript
+
+
         }
+
+        ?>
+        <script language="javascript">
+            location.replace("index.php");
+        </script>
+        <?php
+
     }
+
+
+    // Try putting form stuff here to see if using header works to redirect
+    // to index.php before refreshing and going back to new post edit page
+
+
+    ?>
+
+
+
+
+    <h2>Ok, so you want to edit your blog post</h2>
+    <form action="edit_post.php"
+          method="POST">
+        Edit your blog post....<br>
+        <input style="background-color:blanchedalmond" type="text" name="title" placeholder="Title your post"
+               value="<?php echo "$title"; ?>"><br><br>
+        <input style="background-color:blanchedalmond" type="text" name="author" placeholder="Who are you?"
+               value="<?php echo "$author"; ?>"><br><br>
+
+        <input type="hidden" name="id" value="<?php echo $id; ?>">
+
+        <textarea style="background-color:lightblue" name="contents"
+                  rows="20" cols="80" onclick="this.innerHTML=''">
+        <?php echo $contents; ?></textarea><br><br>
+        <input type="submit" name="editsubmit" value="Submit Edited Blog Post"><br>
+        <?php echo $id; ?>
+    </form>
+
+<?php
+
+
+    }
+
 
 
         // Above is logic for editing a new post
@@ -289,24 +354,17 @@ else  {
 
 // below is my old way
 //if (isset($_GET['id'])) {
-
 //    $id = $_GET['id'];
-
 //    $sql = $db->prepare("SELECT title, author, contents FROM posts WHERE id = ?");
     // How to search both title and contents?
-
-
     // $search_term = "%" . $_GET['searchBox'] . "%";
 //    $editid = $_GET['id'];
 //    $sql->bind_param("i", $editid);
 //    $sql->execute();
-
 //    $sql->bind_result($title, $author, $contents);
 //    $sql->fetch();
-
 // have gotten data and filled in variables
 
 
 
-}
-
+?>
