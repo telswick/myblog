@@ -2,6 +2,15 @@
 /**
  * Created by PhpStorm.
  * User: Traci
+ * Date: 8/11/2015
+ * Time: 12:54 PM
+ */
+
+
+
+/**
+ * Created by PhpStorm.
+ * User: Traci
  * Date: 7/27/2015
  * Time: 9:15 PM
  */
@@ -48,8 +57,6 @@ require_once('db_info.php');
 <?php
 
 
-// Going back to the basics, delete option to show alternate form input for edit post
-
 
 $id = "NULL";
 if (isset($_GET['id']))  {
@@ -62,19 +69,19 @@ echo "id = $id";
 
 // if($_GET['id'] == "NULL")  {
 
-// if ($id == "NULL")   {
+if ($id == "NULL" && !isset($_POST['editsubmit']))   {
 
-        // id was NULL
-        // it's a new post
-        // still new because there is nothing in $_GET['id'] from the index page
-        // your existing logic for inserting a new post goes here.
-        // hum can't be || above because it does new post even with id not NULL
+    // id was NULL
+    // it's a new post
+    // still new because there is nothing in $_GET['id'] from the index page
+    // your existing logic for inserting a new post goes here.
+    // hum can't be || above because it does new post even with id not NULL
 
-        //------------------------------------------------------------------//
-        // Copying all logic for brand new post here                        //
+    //------------------------------------------------------------------//
+    // Copying all logic for brand new post here                        //
 
-        // this is the if for submitting a new (not edited) post
-        // try moving form section to the end of this if for a new (not edited) post
+    // this is the if for submitting a new (not edited) post
+    // try moving form section to the end of this if for a new (not edited) post
 
 
 
@@ -106,15 +113,12 @@ echo "id = $id";
             echo $error;
         } else {
             // We are good to make the post
-        }
 
 
 // do some input validation above here
 // use if statements to check if all of the fields are filled out, if not
 // display a message on page like "you forgot ..."
 // copying from hw8, todo_list
-
-        if ($id == "NULL") {
 
             $stmt = $db->prepare("INSERT INTO posts (title, author, date, contents) VALUES (?, ?, ?, ?)");
             echo $db->error;
@@ -131,60 +135,21 @@ echo "id = $id";
             //$stmt = $db->prepare("INSERT INTO todo_list (item) VALUES (?)");
 
             $stmt->bind_param("ssss", $title, $author, $mydate, $contents);
+            // $stmt->close();
+
+//actually run statement with the parameters we've substituted, how to add a row
+
             $stmt->execute();
             header('Location: http://10.10.10.60/myblog/index.php'); /* Redirect browser */
 
+            // wonder if above redirect is working instead of one in edit post section, no redirected
+            // anyway after editsubmit, but didn't update database!
 
-        }  // this closes if for new post
-
-
-// in below section, instead of having user click on a link
-// go straight back to index page using header ??
-// and do the same for after editing a post
+        }    // closes else for ready to make post (no input errors)
+    }        // closes if isset($_POST['submit']
 
 
-        // <br>
-        // <br>
-        // Get rid of this, maybe messing up update post function?
-        // Now you can look at all of the posts:
-        // <a href="index.php">Go to the index page</a>
-        // <br>
-        // <br>
-
-
-        // Above is logic for brand new post
-        //------------------------------------------------------------------
-
-        // Below is logic for editing a post
-
-
-        else {
-            // id was not NULL
-            // this is an existing post
-            // update it.
-            // so there is something in the $_GET['id'] url
-            // coming from the index page
-
-            // UPDATE posts SET title = ?, author = ?, contents = ?
-            // WHERE id = ?
-
-            $update = $db->prepare("UPDATE posts SET title = ?, author = ?,  date = ?, contents = ?
-                    WHERE id = ?");
-            echo $db->error;
-
-            $update->bind_param("ssssi", $postedittitle, $posteditauthor, $mydate, $posteditcontents, $id);
-            $update->execute();
-
-            header('Location: http://10.10.10.60/myblog/index.php'); /* Redirect browser */
-            exit();
-
-        }   // closes else for editing a post
-
-    }  // closes if for isset($_POST['submit'])
-
-    // Move single input form stuff to below
-
-?>
+    ?>
     <h2>Ok, go ahead and write about anything</h2>
     <form action="edit_post.php"
           method="POST">
@@ -201,12 +166,41 @@ echo "id = $id";
         <input type="submit" name="submit" value="Submit Blog Post"><br>
 
     </form>
+<?php  }  // this closes if for new post
+
+
+// in below section, instead of having user click on a link
+// go straight back to index page using header ??
+// and do the same for after editing a post
+
+
+// <br>
+// <br>
+// Get rid of this, maybe messing up update post function?
+// Now you can look at all of the posts:
+// <a href="index.php">Go to the index page</a>
+// <br>
+// <br>
+
+
+// Above is logic for brand new post
+//------------------------------------------------------------------
+
+// Below is logic for editing a post
 
 
 
-    <?php
 
-    // Everything below commented out
+else {
+    // id was not NULL
+    // this is an existing post
+    // update it.
+    // so there is something in the $_GET['id'] url
+    // coming from the index page
+
+    // UPDATE posts SET title = ?, author = ?, contents = ?
+    // WHERE id = ?
+
 
     //------------------------------------------------------------------//
     // Copying all logic for doing an edit post with alternate submit button//
@@ -215,12 +209,12 @@ echo "id = $id";
 
     // Why is the stuff below even there at all? comment out next 6 lines
 
-    // echo "id is $id";
+    echo "id is $id";
 
-    // $sql = $db->prepare("SELECT title, author, contents FROM posts WHERE id = ?");
+    $sql = $db->prepare("SELECT title, author, contents FROM posts WHERE id = ?");
     // $id = $_GET['id'];
-    // $sql->bind_param("i", $id);
-    // $sql->execute();
+    $sql->bind_param("i", $id);
+    $sql->execute();
 
     // maybe I need to reference the carried over variables from index, with the _GET
     // instead of bind_result and fetch
@@ -231,8 +225,8 @@ echo "id = $id";
     // just doing below so I can change form to edit version
     // and show the user what they are editing
 
-    // $sql->bind_result($edittitle, $editauthor, $editcontents);
-    // $sql->fetch();
+    $sql->bind_result($edittitle, $editauthor, $editcontents);
+    $sql->fetch();
     // $sql->close();
 
 
@@ -241,14 +235,14 @@ echo "id = $id";
     // removing form section below to end of file
     // removing form section above to end of file
     // $url = "http://10.10.10.60/myblog/index.php";
-    // echo
+    // echo '<META HTTP-EQUIV=Refresh CONTENT="0; URL='.$url.'">';
     // header("Location: http://10.10.10.60/myblog/index.php"); /* Redirect browser */
     // exit();
     // Insert copy of php code that stores blog posts, except use Update instead and only change the
     // one post with id selected
     // add code to redirect to index page after post editsubmit but
 
-    // echo "id is still: $id";
+    echo "id is still: $id";
 
     // ????? getting to this point even when $id is NULL, and showing edit post form again after submitedit clicked
 
@@ -256,41 +250,41 @@ echo "id = $id";
     // now we're just circling back to another editpost form after clicking editsubmit button and id becomes NULL
     // and if id is NULL shouldn't even be in edit section
 
-    // if (isset($_POST['editsubmit'])  && $id != "NULL" ) {
-    //     $postedittitle = $_POST['edittitle'];
-    //     $posteditauthor = $_POST['editauthor'];
-    //     $mydate = date("d F Y H:i:s");
-    //     $posteditcontents = $_POST['editcontents'];
+    if (isset($_POST['editsubmit'])  && $id != "NULL" ) {
+        $postedittitle = $_POST['edittitle'];
+        $posteditauthor = $_POST['editauthor'];
+        $mydate = date("d F Y H:i:s");
+        $posteditcontents = $_POST['editcontents'];
 
-    //     echo $postedittitle;
-    //     echo $posteditauthor;
-    //     echo $posteditcontents;
+        echo $postedittitle;
+        echo $posteditauthor;
+        echo $posteditcontents;
 
-    //     echo "id is: $id after editsubmit, before input val";
+        echo "id is: $id after editsubmit, before input val";
 
         // input validation next
 
-    //     $error = "";
+        $error = "";
 
-    //     if ($postedittitle == "") {
-    //         $error .= "You forgot to add a title!<br>";
+        if ($postedittitle == "") {
+            $error .= "You forgot to add a title!<br>";
             // echo $error;
-    //         }
-    //     else if ($posteditauthor == "") {
-    //         $error .= "You forgot to put your name!<br>";
+        }
+        else if ($posteditauthor == "") {
+            $error .= "You forgot to put your name!<br>";
             // echo $error;
-    //         }
-    //     else if ($posteditcontents == "" || $posteditcontents == "Write something!") {
-    //         $error .= "So what did you want to write in your blog post...?  Hello, are you still there?<br>";
+        }
+        else if ($posteditcontents == "" || $posteditcontents == "Write something!") {
+            $error .= "So what did you want to write in your blog post...?  Hello, are you still there?<br>";
             // echo $error;
-    //         }
+        }
 
         // if ANYTHING set an error, don't insert the post
 
-    //     if ($error != "") {
+        if ($error != "") {
             // just print out the error and don't make the post
-    //         echo $error;
-    //     } else {
+            echo $error;
+        } else {
             // We are good to make the post
 
 
@@ -308,17 +302,17 @@ echo "id = $id";
             // exit();
             // header("Location: http://10.10.10.60/myblog/index.php"); /* Redirect browser */
 
-    //         echo "id is now: $id after postedit submit and input val";   // doesn't seem to be getting to this point
+            echo "id is now: $id after postedit submit and input val";   // doesn't seem to be getting to this point
 
-    //         $update = $db->prepare("UPDATE posts SET title = ?, author = ?,  date = ?, contents = ?
-    //                 WHERE id = ?");
-    //         echo $db->error;
+            $update = $db->prepare("UPDATE posts SET title = ?, author = ?,  date = ?, contents = ?
+                    WHERE id = ?");
+            echo $db->error;
 
-    //         $update->bind_param("ssssi", $postedittitle, $posteditauthor, $mydate, $posteditcontents, $id);
-    //         $update->execute();
+            $update->bind_param("ssssi", $postedittitle, $posteditauthor, $mydate, $posteditcontents, $id);
+            $update->execute();
 
-    //         header('Location: http://10.10.10.60/myblog/index.php'); /* Redirect browser */
-    //         exit();
+            header('Location: http://10.10.10.60/myblog/index.php'); /* Redirect browser */
+            exit();
 
             // above code is still not working to submit an edited post and go to index immediately
             // maybe problem is in my index.php and not showing differing values in the table
@@ -326,45 +320,46 @@ echo "id = $id";
             // through the sql database
             // exit();
             // $url = "http://10.10.10.60/myblog/ndex.php";
+            // echo '<META HTTP-EQUIV=Refresh CONTENT="0; URL='.$url.'">';
             // desperate so try javascript
 
 
-    //     }   // closes else for we are ready to make an edited post
+        }   // closes else for we are ready to make an edited post
 
-    // }       // closes if isset $_POST['editpost'] submit
+    }       // closes if isset $_POST['editpost'] submit
 
 
     // Try putting form stuff here to see if using header works to redirect
     // to index.php before refreshing and going back to new post edit page
 
 
-    //
-
-    //
-
-    // <h2>Ok, so you want to edit your blog post</h2>
-    // <form action="edit_post.php"
-    //      method="POST">
-    //    Edit your blog post....<br>
-    //    <input style="background-color:blanchedalmond" type="text" name="edittitle" placeholder="Title your post"
-    //           value="<?php echo "$edittitle"; "><br><br>
-    //    <input style="background-color:blanchedalmond" type="text" name="editauthor" placeholder="Who are you?"
-    //           value="<?php echo "$editauthor"; "><br><br>
-
-    //    <input type="hidden" name="id" value="<?php echo $id; "><br>
-
-    //    <textarea style="background-color:lightblue" name="editcontents"
-    //              rows="20" cols="80" onclick="this.innerHTML=''">
-    //              <?php echo $editcontents;
-    //    </textarea><br><br>
-    //    <input type="submit" name="editsubmit" value="Submit Edited Blog Post"><br>
-    //    <?php echo $id;
-    // </form>
-
-// <?php
+    ?>
 
 
-//    }    // this closes else statement for doing update post, meaning there is an id in $_GET['id']
+
+    <h2>Ok, so you want to edit your blog post</h2>
+    <form action="edit_post.php"
+          method="POST">
+        Edit your blog post....<br>
+        <input style="background-color:blanchedalmond" type="text" name="edittitle" placeholder="Title your post"
+               value="<?php echo "$edittitle"; ?>"><br><br>
+        <input style="background-color:blanchedalmond" type="text" name="editauthor" placeholder="Who are you?"
+               value="<?php echo "$editauthor"; ?>"><br><br>
+
+        <input type="hidden" name="id" value="<?php echo $id; ?>"><br>
+
+        <textarea style="background-color:lightblue" name="editcontents"
+                  rows="20" cols="80" onclick="this.innerHTML=''">
+                  <?php echo $editcontents; ?>
+        </textarea><br><br>
+        <input type="submit" name="editsubmit" value="Submit Edited Blog Post"><br>
+        <?php echo $id; ?>
+    </form>
+
+<?php
+
+
+}    // this closes else statement for doing update post, meaning there is an id in $_GET['id']
 
 
 
