@@ -94,8 +94,9 @@ if (isset($_GET['id']))  {
 echo "delete id = $delid";
 
 // The following executes if the user clicks the Search button
+// NO DELETE AND YES SEARCH
 
-if (isset($_GET['cool']))   {
+if ($delid == "NULL" && isset($_GET['cool']))   {
         // set up the SELECT query
         // $term = $_GET['term'];
     // $title = $_GET['title'];
@@ -114,6 +115,7 @@ if (isset($_GET['cool']))   {
     $sql->bind_result($title, $author, $contents, $date);
 
     // table below will only show the rows where the search_term has been found in the contents
+    // but it's missing links for edit and delete
 
     ?>
 
@@ -174,8 +176,9 @@ if (isset($_GET['cool']))   {
     // Try adding an AND condition about the search button, AND not searching
     // This table should also show the edited post as well, why isn't it?
 
+// NO DELETE AND NO SEARCH, JUST FULL TABLE
 
-if($delid == "NULL" && !isset($_GET['cool']))   {
+elseif($delid == "NULL" && !isset($_GET['cool']))   {
         // your existing SELECT logic here
         $sql = "SELECT * FROM posts";
         $result = $db->query($sql);
@@ -218,7 +221,10 @@ if($delid == "NULL" && !isset($_GET['cool']))   {
     // $delid = $row['id'];
     // echo "Delete id = $delid";
 
-    else {
+// DELETE AND NO SEARCH
+// still having problem with only being able to delete once before id is undefined, should be getting new delid
+
+elseif($delid != "NULL" && !isset($_GET['cool'])) {
         // $id = $_POST['id'];
         $delStatement = $db->prepare("DELETE FROM posts WHERE id = ?");
 
@@ -228,12 +234,12 @@ if($delid == "NULL" && !isset($_GET['cool']))   {
 
 
     // and then need to repeat showing the whole index minus post with delete id
+    // fixed delete only once problem by changing following line to SELECT *
 
-        $sql = "SELECT title, author, contents, date FROM posts";
+        $sql = "SELECT * FROM posts";
 
         // $sql->bind_result($title, $author, $contents, $date);
         // try changing from after search table to regular all index table
-
         // PROBLEM: going to index page shows both tables, first for no delete and second for delete
         // ok fixed that, not showing both tables anymore BUT
         // PROBLEM:  now can only delete one time and then get error second time trying to delete
@@ -241,7 +247,6 @@ if($delid == "NULL" && !isset($_GET['cool']))   {
         // PROBLEM: can't go back to edit page to edit a post after deleting one post
         // PROBLEM: search function messed up, showing both tables and not including links (edit & delete)
         // on the search results table
-
 
         $result = $db->query($sql);
 
@@ -270,7 +275,6 @@ if($delid == "NULL" && !isset($_GET['cool']))   {
             <td>  <a href="index.php?id=<?php echo $row['id']; ?>">Delete</a></td>  <?php  ?>
             </tr> <?php  }  ?>
             <!-- end second row -->
-
         </table> <!-- end the table -->
         </body>
 
@@ -280,7 +284,9 @@ if($delid == "NULL" && !isset($_GET['cool']))   {
 
 
         <?php }  }  // closing the if result and closing the delete option (else)
-                    // New stuff above for delete function   ?>
+                    // New stuff above for delete function
+
+?>
 
 
     <form action="index.php" method="GET">

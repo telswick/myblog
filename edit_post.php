@@ -51,31 +51,25 @@ require_once('db_info.php');
 // Going back to the basics, delete option to show alternate form input for edit post
 
 
-$id = "NULL";
+$editid = "NULL";
 if (isset($_GET['id']))  {
-    $id = $_GET['id'];
+    $editid = $_GET['id'];
 }
 
-echo "id = $id";
+echo "edit id = $editid";
 
 // if (isset($_POST['submit']))  {
-
 // if($_GET['id'] == "NULL")  {
-
 // if ($id == "NULL")   {
-
         // id was NULL
         // it's a new post
         // still new because there is nothing in $_GET['id'] from the index page
         // your existing logic for inserting a new post goes here.
         // hum can't be || above because it does new post even with id not NULL
-
         //------------------------------------------------------------------//
         // Copying all logic for brand new post here                        //
-
         // this is the if for submitting a new (not edited) post
         // try moving form section to the end of this if for a new (not edited) post
-
 
 
     if (isset($_POST['submit'])) {
@@ -83,20 +77,18 @@ echo "id = $id";
         $author = $_POST['author'];
         $mydate = date("d F Y H:i:s");
         $contents = $_POST['contents'];
-        // $id = "NULL";
+        $editid = $_POST['id'];       // Adding this line fixed my edit/replace problem
 
         $error = "";
 
         if ($title == "") {
             $error .= "You forgot to add a title!<br>";
-            // echo $error;
 
         } else if ($author == "") {
             $error .= "You forgot to put your name!<br>";
-            // echo $error;
+
         } else if ($contents == "" || $contents == "Write something!") {
             $error .= "So what did you want to write in your blog post...?  Hello, are you still there?<br>";
-            // echo $error;
         }
 
         // if ANYTHING set an error, don't insert the post
@@ -112,13 +104,16 @@ echo "id = $id";
 // do some input validation above here
 // use if statements to check if all of the fields are filled out, if not
 // display a message on page like "you forgot ..."
-// copying from hw8, todo_list
+// now below check status of $id
 
-        if ($id == "NULL") {
+        echo "good to make post";
+
+        if ($editid == "NULL") {
+
+            echo "Should be in the if for new post: $editid";
 
             $stmt = $db->prepare("INSERT INTO posts (title, author, date, contents) VALUES (?, ?, ?, ?)");
             echo $db->error;
-
 // if (!isset($_SESSION['list'])) {
 //     $_SESSION['list'] = array();
 // }
@@ -129,20 +124,15 @@ echo "id = $id";
             //            $_POST['todo']);
             //$stmt = $db->prepare("INSERT INTO todo_list ('item', 'assigndate') VALUES (?, ?)");
             //$stmt = $db->prepare("INSERT INTO todo_list (item) VALUES (?)");
-
             $stmt->bind_param("ssss", $title, $author, $mydate, $contents);
             $stmt->execute();
             header('Location: http://10.10.10.60/myblog/index.php'); /* Redirect browser */
 
-
         }  // this closes if for new post
-
 
 // in below section, instead of having user click on a link
 // go straight back to index page using header ??
 // and do the same for after editing a post
-
-
         // <br>
         // <br>
         // Get rid of this, maybe messing up update post function?
@@ -150,39 +140,35 @@ echo "id = $id";
         // <a href="index.php">Go to the index page</a>
         // <br>
         // <br>
-
-
         // Above is logic for brand new post
         //------------------------------------------------------------------
-
         // Below is logic for editing a post
 
 
-        else {
+        if ($editid != "NULL") {
             // id was not NULL
             // this is an existing post
             // update it.
             // so there is something in the $_GET['id'] url
             // coming from the index page
-
             // UPDATE posts SET title = ?, author = ?, contents = ?
             // WHERE id = ?
 
-            $update = $db->prepare("UPDATE posts SET title = ?, author = ?,  date = ?, contents = ?
-                    WHERE id = ?");
+            echo "should be in the elseif for edit; $editid";
+
+            $update = $db->prepare("UPDATE posts SET title = ?, author = ?,  date = ?, contents = ? WHERE id = ?");
             echo $db->error;
 
-            $update->bind_param("ssssi", $postedittitle, $posteditauthor, $mydate, $posteditcontents, $id);
+            $update->bind_param("ssssi", $title, $author, $mydate, $contents, $editid);
             $update->execute();
 
             header('Location: http://10.10.10.60/myblog/index.php'); /* Redirect browser */
-            exit();
+            // exit();
 
-        }   // closes else for editing a post
+        }   // this closes else for editing a post
 
     }  // closes if for isset($_POST['submit'])
 
-    // Move single input form stuff to below
 
 ?>
     <h2>Ok, go ahead and write about anything</h2>
@@ -192,7 +178,7 @@ echo "id = $id";
         <input style="background-color:blanchedalmond" type="text" name="title" placeholder="Title your post"><br><br>
         <input style="background-color:blanchedalmond" type="text" name="author" placeholder="Who are you?"><br><br>
 
-        <input type="hidden" name="id" value="<?php   echo $id;  ?>">
+        <input type="hidden" name="id" value="<?php   echo $editid;  ?>">
 
             <textarea style="background-color:lightblue" name="contents"
                       rows="20" cols="80" onclick="this.innerHTML=''">
