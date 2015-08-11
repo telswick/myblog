@@ -171,10 +171,11 @@ if (isset($_GET['cool']))   {
     // The following executes if the user does not click Search box, prints entire index
     // and we are not deleting
     // Try changing else  below to an elseif, so we don't show table twice
-    // Try adding an AND condition about the search button
+    // Try adding an AND condition about the search button, AND not searching
+    // This table should also show the edited post as well, why isn't it?
 
 
-if($delid == "NULL")   {
+if($delid == "NULL" && !isset($_GET['cool']))   {
         // your existing SELECT logic here
         $sql = "SELECT * FROM posts";
         $result = $db->query($sql);
