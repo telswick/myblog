@@ -117,6 +117,8 @@ if ($delid == "NULL" && isset($_GET['cool']))   {
     // table below will only show the rows where the search_term has been found in the contents
     // but it's missing links for edit and delete
 
+    // Now adding tags, new column to tables
+
     ?>
 
     <body>
@@ -126,6 +128,7 @@ if ($delid == "NULL" && isset($_GET['cool']))   {
         <th>Author</th>
         <th>Date Added</th>
         <th>Contents</th>
+        <th>Tags</th>
         <th>Link to edit</th>
         <th>Delete</th>
     </tr> i<!-- end first row -->
@@ -194,6 +197,7 @@ elseif($delid == "NULL" && !isset($_GET['cool']))   {
         <th>Author</th>
         <th>Date Added</th>
         <th>Contents</th>
+        <th>Tags</th>
         <th>Link to edit</th>
         <th>Delete</th>
     </tr> <!-- end first row -->
@@ -261,6 +265,7 @@ elseif($delid != "NULL" && !isset($_GET['cool'])) {
             <th>Author</th>
             <th>Date Added</th>
             <th>Contents</th>
+            <th>Tags</th>
             <th>Link to edit</th>
             <th>Delete</th>
         </tr> <!-- end first row -->

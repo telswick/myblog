@@ -78,6 +78,11 @@ echo "edit id = $editid";
         $mydate = date("d F Y H:i:s");
         $contents = $_POST['contents'];
         $editid = $_POST['id'];       // Adding this line fixed my edit/replace problem
+        $tag = $_POST['tag'];         // Adding variable for tag
+        // $post_id = $_POST['id'];      // need this?
+
+
+        echo $post_id;
 
         $error = "";
 
@@ -126,6 +131,20 @@ echo "edit id = $editid";
             //$stmt = $db->prepare("INSERT INTO todo_list (item) VALUES (?)");
             $stmt->bind_param("ssss", $title, $author, $mydate, $contents);
             $stmt->execute();
+
+
+            $post_id = $db->insert_id;  // This fixes post_id being 0 in tags table
+
+            // Added below section for storing tags in tags table
+
+            $storetags = $db->prepare("INSERT INTO tags (post_id, tag) VALUES (?, ?)");
+            echo $db->error;
+
+            $storetags->bind_param("is", $post_id, $tag);
+            $storetags->execute();
+
+            //  Added above section for storing tags in tags table
+
             header('Location: http://10.10.10.60/myblog/index.php'); /* Redirect browser */
 
         }  // this closes if for new post
@@ -169,7 +188,7 @@ echo "edit id = $editid";
 
     }  // closes if for isset($_POST['submit'])
 
-
+        // OK now starting work on tags, add place in form to let user add a tag
 ?>
     <h2>Ok, go ahead and write about anything</h2>
     <form action="edit_post.php"
@@ -184,6 +203,7 @@ echo "edit id = $editid";
                       rows="20" cols="80" onclick="this.innerHTML=''">
                       Write something!
             </textarea><br><br>
+        <input type="text" name="tag" placeholder="Add a tag here:"><br><br>
         <input type="submit" name="submit" value="Submit Blog Post"><br>
 
     </form>
